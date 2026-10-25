@@ -47,7 +47,6 @@ let curr_site_idx = -1;
 
 let start_drag = vec2(0.0, 0.0);
 let last_drag = vec2(0.0, 0.0);
-let curr_drag = vec2(0.0, 0.0);
 
 let last_mouse_pos = vec2(0.0, 0.0);
 
@@ -72,9 +71,9 @@ function on_mouse_down(x, y) {
 function on_mouse_move(x, y) {
 	last_mouse_pos = vec2(x, y);
 
-	if (!is_mouse_down) return;
-
-	curr_drag = vec2(x, y);
+	if (!is_mouse_down) {
+		return;
+	}
 
 	let dx = x - last_drag[0];
 	let dy = y - last_drag[1];
@@ -218,6 +217,10 @@ function delete_site(idx) {
 function resize() {
 	// Match the canvas's drawing buffer to the size it is shown at, and
 	// draw over all of it
+	base_width = window.innerWidth;
+	base_height = window.innerHeight;
+	aspect_ratio = base_height / base_width;
+
 	canvas.width = base_width;
 	canvas.height = base_width * aspect_ratio;
 	gl.viewport(0, 0, canvas.width, canvas.height);
@@ -302,7 +305,10 @@ function animate(timestamp) {
 	if (is_depth && site_num > 0) {
 		gl.enable(gl.DEPTH_TEST);
 		gl.depthFunc(gl.LESS);
-		gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 66, site_num);
+
+		let vertex_count = (metric == EUCLIDEAN_METRIC) ? 66 : 6;
+
+		gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, vertex_count, site_num);
 	} else {
 		gl.bindVertexArray(quad_vao);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);

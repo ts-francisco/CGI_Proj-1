@@ -17,7 +17,6 @@ uniform vec2 u_site_position[MAX_SITES];
 uniform vec4 u_site_color[MAX_SITES];
 uniform int u_n_sites;
 uniform int u_metric; // 0 Euclidean, 1 Manhattan, 2 Chebyshev
-uniform float u_border_delta;
 uniform bool u_is_depth;
 
 uniform int u_viewport_width;
